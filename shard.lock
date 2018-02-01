@@ -1,0 +1,6 @@
+version: 1.0
+shards:
+  crystal_allegro:
+    github: Fryguy/crystal_allegro
+    commit: a77bb4130d17529fd0be2d341e1e1d8f5815544e
+
