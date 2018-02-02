@@ -1,6 +1,6 @@
 require "./APF/*"
+require "crsfml"
 
-# TODO: Write documentation for `APF`
 module APF
-  # TODO: Put your code here
+    Window.new()
 end
