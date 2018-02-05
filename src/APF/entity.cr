@@ -8,7 +8,7 @@ class Entity
     @game       : Game
 
     def initialize(@game)
-        @sprite : SF::Sprite = @@sprite.dup
+        @sprite = @@sprite404.dup
         
         @xmom = 0
         @ymom = 0
@@ -23,8 +23,9 @@ class Entity
     end
 
     def draw()
+        @sprite.scale = SF.vector2(10,10)
         @sprite.position = SF.vector2(@x,@y)
-        @game.window.draw @sprite 
+        @game.drawsprite @sprite 
     end
 
     def tick()

@@ -1,6 +1,14 @@
 version: 1.0
 shards:
-  crystal_allegro:
-    github: Fryguy/crystal_allegro
-    commit: a77bb4130d17529fd0be2d341e1e1d8f5815544e
+  crsfml:
+    github: oprypin/crsfml
+    version: 2.4.10
+
+  stumpy_core:
+    github: stumpycr/stumpy_core
+    version: 1.8.2
+
+  stumpy_png:
+    github: stumpycr/stumpy_png
+    version: 4.2.2
 

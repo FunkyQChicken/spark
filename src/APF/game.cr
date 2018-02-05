@@ -1,17 +1,16 @@
 
 class Game 
-    property window       : SF::RenderWindow
-    property entities     : Array(Entity) 
-    property projectiles  : Array(Entity)
-    property players      : Array(Entity)
-    property level        : Level
+    property window       : SF::RenderWindow,
+             projectiles  : Array(Entity),
+             players      : Array(Player),
+             level        : Level | Nil  
 
     def initialize(@window)
-        @entities    = [] of Entity 
         @projectiles = [] of Entity
-        @players     = [] of Entity
-        @level       = Level.new  
+        @players     = [] of Player
+        @level       = Level.new self
         @window      = window
+        @projectiles << Entity.new self
     end
 
     def key_input(key)
@@ -38,5 +37,10 @@ class Game
         @players.select do |player|
             player.draw    
         end
+        @level.as(Level).draw
+    end
+
+    def drawsprite(sprite) 
+        @window.draw sprite
     end
 end

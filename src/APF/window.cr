@@ -12,6 +12,7 @@ class Window
             game.key_input(event)
           end
           game.tick
+          window.clear SF::Color.new(0,0,0)
           game.draw
           # Nothing is drawn, so the window may be blank or even garbled
           window.display()
