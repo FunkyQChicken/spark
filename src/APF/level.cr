@@ -1,3 +1,4 @@
+# allows reading in the "map.png" to build the level
 require "stumpy_png"
 
 class Level
@@ -9,6 +10,8 @@ class Level
     @game : Game
 
     def initialize(@game, @name = "def")
+        @tilewidth = 20.0
+
         @solid = tile(0)
         @top   = tile(1)
         @right = tile(2)
@@ -16,6 +19,7 @@ class Level
         @level = buildlevel
     end
 
+    # return the level built from the map.png in the correct level file.
     def buildlevel()
         canvas = StumpyPNG.read("recources/levels/"+@name+"/map.png")
         canvas.width.times.map do |x|
@@ -29,27 +33,36 @@ class Level
             end.to_a
         end.to_a
     end
-
-    def tile(x)
-        Tile.new("levels/"+@name+"/"+x.to_s)
+   
+    # do the coordinates given clip? (are they inside a block) 
+    def clips(x : Number, y : Number) : Boolean
+        !@level[x.to_i/@tilewidth][y.to_i/@tilewidth].nil?
     end
 
+    # get the tile requested as a Tile
+    def tile(x)
+        Tile.new("levels/"+@name+"/"+x.to_s, @tilewidth)
+    end
+
+    # draw the level
     def draw
         return if @game.nil?
         @level.each_with_index do |row,x|
             row.each_with_index do |tile,y|  
                 next if tile.nil?
-                tile.sprite.position = SF.vector2(x * 10, y * 10)
+                tile.sprite.position = SF.vector2(x * @tilewidth, y * @tilewidth)
                 @game.drawsprite tile.sprite       
             end
         end
     end
 end 
 
+# A class to represent a single block on the map/level
 class Tile
     property sprite : SF::Sprite
-    def initialize(sprite : String) 
+    def initialize(sprite : String, size : Float) 
         @sprite = Entity.get_sprite(sprite)
-        @sprite.scale = SF.vector2(10,10)
+        scale = size / @sprite.texture_rect.width
+        @sprite.scale = SF.vector2(scale, scale)
     end
 end

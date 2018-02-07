@@ -3,14 +3,16 @@ class Game
     property window       : SF::RenderWindow,
              projectiles  : Array(Entity),
              players      : Array(Player),
-             level        : Level | Nil  
+             level        : Level | Nil,
+             clock        : SF::Clock  
 
     def initialize(@window)
+        @clock       = SF::Clock.new
         @projectiles = [] of Entity
         @players     = [] of Player
         @level       = Level.new self
         @window      = window
-        @projectiles << Entity.new self
+        @projectiles << Player.new self
     end
 
     def key_input(key)
