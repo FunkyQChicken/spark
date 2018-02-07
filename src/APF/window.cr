@@ -4,6 +4,7 @@ class Window
     def initialize
         window = SF::RenderWindow.new(SF::VideoMode.new(800, 600), "CrSFML works!")
         game = Game.new(window)
+        window.framerate_limit = 60
         while window.open?
           while event = window.poll_event()
             if event.is_a? SF::Event::Closed
