@@ -1,4 +1,3 @@
-require "crsfml"
 
 class Entity
     
@@ -7,33 +6,81 @@ class Entity
     @sprite     : SF::Sprite
     @game       : Game
 
+    @width  : Int32 
+    @height : Int32
+
     def initialize(@game)
         @sprite = @@sprite404.dup
-        
+       
+        # x and y momentum, other variables can influence speed, 
+        # but this allows other objects to easily read others speeds 
         @xmom = 0
         @ymom = 0
         
+        # x and y position of the entity,
+        # this is measured form the center of the sprite, not the top left corner.
+        # this makes game physics easier but drawing the sprites a little harder
         @x      = 0
         @y      = 0
+
+        # dimensions of the sprite as it should appear on the screen
         @width  = 0
         @height = 0
+       
+        # animation variables,
+        # the number of frames in the animation 
+        @frames = 0
+        # the width of each frame frame, not the entire spritesheet.
+        @framewidth  = 0
+        # the heigth of each frame
+        @frameheight = 0
+        # the speed in fps that you want the animation to run in
+        @framespeed  = 0
+        # the time the current animation started, relevant for non looping anim.s
+        @animstart   = 0
+    end
+   
+    # sets the frame according to 
+    # framelength and frameheight
+    def frame(x)
+        @sprite.texture_rect = SF::IntRect.new(@framewidth * x,0,@framewidth,@frameheight)
+    end 
+   
+    # sets the current frame based off of elapsed time 
+    def animate(loops = true)
+        frame = @game.clock.elapsed_time.as_milliseconds * @framespeed / 1000.0
+        if (loops || frame < @frames)   
+            frame(frame.to_i % @frames)
+        end
     end
 
+
+    # resizes sprite and height to fit the current width 
+    def resizeSprite
+        xscale  = @width * 1.0  / @framewidth
+        yscale  = @height * 1.0 / @frameheight
+        @sprite.scale = SF.vector2(xscale,yscale);
+    end
+
+    # a method to take key input
     def input(key)
     end
 
+    # a method to draw the sprite
     def draw()
-        @sprite.scale = SF.vector2(10,10)
-        @sprite.position = SF.vector2(@x,@y)
-        @game.drawsprite @sprite 
+        @sprite.position = SF.vector2(@x-(@width/2),@y-(@height/2))
+        @game.drawsprite @sprite
     end
 
+    # this is called each game tick
     def tick()
-        @x += @xmom
-        @y += @ymom
+        true
     end
 
-    def self.get_sprite(name)
-        SF::Sprite.new(SF::Texture.from_file("./recources/"+name+".png"))
+    # loads an image in the recourses folder
+    def self.get_sprite(name) : SF::Sprite
+        sprite = SF::Sprite.new
+        sprite.texture =  SF::Texture.from_file("./recources/"+name+".png")
+        return sprite
     end
 end
