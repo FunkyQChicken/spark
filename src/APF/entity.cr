@@ -19,12 +19,22 @@ class Entity
         @ymom = 0.0
         
         # x and y position of the entity,
-        # this is measured form the center of the sprite, not the top left corner.
-        # this makes game physics easier but drawing the sprites a little harder
+        # this is measured from the center of the sprite, not the top left corner.
+        # this makes game physics harder but drawing the sprites and hitboxes easier.
         @x      = 0.0
         @y      = 0.0
 
         # dimensions of the sprite as it should appear on the screen
+        # setting sprite height is a bad idea though, it is automatically set
+        # accoriding to sprite width in order to remove any stretching/squeezing
+        # of the texture
+        @sprite_width = 0
+        @sprite_height = 0
+
+        # is the sprite facing right?
+        @facingright = false
+
+        # dimensions of the hitbox
         @width  = 0
         @height = 0
        
@@ -50,17 +60,19 @@ class Entity
     # sets the current frame based off of elapsed time 
     def animate(loops = true)
         frame = @game.clock.elapsed_time.as_milliseconds * @framespeed / 1000.0
+        resizeSprite
         if (loops || frame < @frames)   
             frame(frame.to_i % @frames)
         end
     end
 
 
-    # resizes sprite and height to fit the current width 
+    # updates sprite to fit height to the sprite width given 
     def resizeSprite
-        xscale  = @width * 1.0  / @framewidth
-        yscale  = @height * 1.0 / @frameheight
-        @sprite.scale = SF.vector2(xscale,yscale);
+        xscale  = @sprite_width * 1.0  / @framewidth
+        @sprite_height = (xscale * @frameheight).to_i
+        # need o reverse x if facing left
+        @sprite.scale = SF.vector2(@facingright ? xscale : -xscale,xscale);
     end
 
     # a method to take key input
@@ -69,14 +81,20 @@ class Entity
 
     # a method to draw the sprite
     def draw()
-        @sprite.position = SF.vector2(@x.to_i-(@width/2),@y.to_i-(@height/2))
+        @sprite.position = SF.vector2((@x + (@facingright ? -@sprite_width : @sprite_width)/2).to_i,(@y - @sprite_height / 2).to_i)
         @game.drawsprite @sprite
     end
 
-    # this is called each game tick, if it returns false the game loop deletes it
+    # this is called each game tick
+    # if it returns false the game loop deletes the entity
     def tick()
         true
     end
+  
+    # would this entity clip(collide with the 'level' 'tile's) at the given coords?
+    def clips(x, y)
+        @game.get_level.clips(x - @width / 2, y - @height / 2, x + @width / 2, y + @height / 2)
+    end 
 
     # loads an image from the resourses folder
     # and returns it. this method is static, 

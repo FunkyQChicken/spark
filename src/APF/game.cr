@@ -12,12 +12,14 @@ class Game
         @players     = [] of Player
         @level       = Level.new self
         @window      = window
-        @projectiles << Player.new self
+        play = Player.new self
+        @players << play
+        #@projectiles << Test.new self
     end
 
-    def key_input(key)
+    def key_input(key, down : Bool)
         @players.each do |player|
-            player.input(key)
+            player.input(key, down)
         end
     end
 
@@ -39,10 +41,17 @@ class Game
         @players.select do |player|
             player.draw    
         end
-        @level.as(Level).draw
+         @level.as(Level).draw
     end
 
     def drawsprite(sprite) 
         @window.draw sprite
     end
+
+    # getter method for @level because it is "nillable" so it has to be cast
+    # as a level each time its used so this makes it a lot easier.
+    def get_level 
+        level.as(Level)
+    end 
+    
 end

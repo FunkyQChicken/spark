@@ -10,7 +10,7 @@ class Level
     @game : Game
 
     def initialize(@game, @name = "def")
-        @tilewidth = 20.0
+        @tilewidth = 25.0
 
         @solid = tile(0)
         @top   = tile(1)
@@ -19,7 +19,7 @@ class Level
         @level = buildlevel
     end
 
-    # return the level built from the map.png in the correct level file.
+  # return the level built from the map.png in the correct level file.
     def buildlevel()
         canvas = StumpyPNG.read("recources/levels/"+@name+"/map.png")
         canvas.width.times.map do |x|
@@ -33,18 +33,33 @@ class Level
             end.to_a
         end.to_a
     end
-   
-    # do the coordinates given clip? (are they inside a block) 
-    def clips(x : Number, y : Number) : Boolean
-        !@level[x.to_i/@tilewidth][y.to_i/@tilewidth].nil?
+    
+    def to_tile_coord(x)
+        (x / @tilewidth).to_i
     end
 
-    # get the tile requested as a Tile
+  # do the coordinates given clip? (are they inside a block) 
+    def clips(x : Number, y : Number) : Bool
+        !@level[to_tile_coord(x)][to_tile_coord(y)].nil?
+    end
+    
+  # the same as clips(Num,Num) except this takes a rectangle of points
+    def clips(xa : Number, ya : Number, xb : Number, yb : Number) : Bool
+        yrange = (to_tile_coord(ya) .. to_tile_coord(yb))
+        (to_tile_coord(xa) .. to_tile_coord(xb)).each do |x|
+            yrange.each do |y|
+                return true unless @level[x][y].nil?
+            end
+        end
+        return false
+    end
+
+  # get the tile requested as a Tile
     def tile(x)
         Tile.new("levels/"+@name+"/"+x.to_s, @tilewidth)
     end
 
-    # draw the level
+  # draw the level
     def draw
         return if @game.nil?
         @level.each_with_index do |row,x|
