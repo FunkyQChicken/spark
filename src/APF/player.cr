@@ -22,10 +22,10 @@ class Player < Entity
       # these variables are documented in Entity class.
         @x = 100.0
         @y = 100.0
-        @framewidth = 64
+        @framewidth  = 64
         @frameheight = 64
-        @framespeed = 10
-        @width       = 35
+        @framespeed  = 10
+        @width       = 15
         @height      = 60
         @sprite_width = 67
         anim :wal
@@ -60,13 +60,13 @@ class Player < Entity
 
       # gravity variables, despite the different name format,
       # gravity is calculated exactly the same way as movement.
-        @max_fall_speed = 15.0
+        @max_fall_speed = 25.0
       # this is equivalent to accel_factor but for falling, this is 
       # factor used when you are holding down the spacebar.
-        @fall_factor_jump = 50.1
+        @fall_factor_jump = 70.1
       # this is the same as @fall_factor_jump, except it is used when you aren't
       # holding down the spacebar.
-        @fall_factor_norm = 30.1
+        @fall_factor_norm = 50.1
 
       # the speed of your ymom when you jump,
         @jump_speed = -12.0
@@ -113,6 +113,10 @@ class Player < Entity
             @ground_to_air_xmom = 0.0
             @ymom = 0.0
         else
+            if @used_jumps < 1
+                @used_jumps = 1
+            end
+            @air = true
             @y = newy
         end
         if clips(newx, @y)
@@ -172,7 +176,7 @@ class Player < Entity
         end
         if !@right && !@left
            anim(:sta)
-        elsif @xmom.abs > @max_speed - 1
+        elsif @xmom.abs > @max_speed - 0.25
            anim(:run)
         else
            anim(:wal)
