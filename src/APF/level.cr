@@ -35,14 +35,18 @@ class Level
     end
 
     def to_tile_coord(x)
-        (x / @tilewidth).to_i
+        (x / @tilewidth).to_i - (x < 0 ? 1 : 0)
+    end
+
+    def tile_at?(x,y)
+      return (0 <= x < @level.size) && (0 <= y < @level[0].size) && !@level[x][y].nil?
     end
 
   # do the coordinates given clip? (are they inside a block)
     def clips(x : Number, y : Number) : Bool
         tilex = to_tile_coord(x)
         tiley = to_tile_coord(y)
-        return 0 > tilex > @level.size || 0 > tiley > @level[0].size || !@level[tilex][tiley].nil?
+        return !tile_at?(tilex,tiley)
     end
 
   # the same as clips(Num,Num) except this takes a rectangle of points
@@ -50,7 +54,7 @@ class Level
         yrange = (to_tile_coord(ya) .. to_tile_coord(yb))
         (to_tile_coord(xa) .. to_tile_coord(xb)).each do |x|
             yrange.each do |y|
-                return true unless @level[x][y].nil?
+                return true unless !tile_at?(x,y)
             end
         end
         return false
