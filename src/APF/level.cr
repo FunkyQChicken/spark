@@ -40,7 +40,9 @@ class Level
 
   # do the coordinates given clip? (are they inside a block)
     def clips(x : Number, y : Number) : Bool
-        !@level[to_tile_coord(x)][to_tile_coord(y)].nil?
+        tilex = to_tile_coord(x)
+        tiley = to_tile_coord(y)
+        return 0 > tilex > @level.size || 0 > tiley > @level[0].size || !@level[tilex][tiley].nil?
     end
 
   # the same as clips(Num,Num) except this takes a rectangle of points

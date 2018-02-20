@@ -23,7 +23,12 @@ class Teleport < Ability
   def initialize(player, game)
     super
     @cooldown = 1000
-    @range = 10
+    @game.get_level.tilewidth
+    @range = 500
+  end
+
+  def get_random_coord
+    rand(@range) - (@range / 2)
   end
 
   def activate
@@ -32,6 +37,14 @@ class Teleport < Ability
     else
       return
     end
-    @player.x = 100.0
+    newx = 0
+    newy = 0
+    while true
+      newx = get_random_coord + @player.x
+      newy = get_random_coord + @player.y
+      break if !@player.clips(newx,newy)
+    end
+    @player.x = newx
+    @player.y = newy
   end
 end

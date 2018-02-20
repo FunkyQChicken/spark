@@ -79,12 +79,15 @@ class Player < Entity
 
       # if true then the player will jump next tick if able to and set this to false.
         @jump = false
-      # this is just to keep track if the jump key has been relesed so that then
 
-      # these are the
+      # these are the abilities.
+      # primary ability
         @primary = Teleport.new(self, @game)
+      # if this is true primary ability will be activated next tick
         @primary_activate = false
+      # secondary ability
         @secondary = Ability.new(self, @game)
+      # if this is true secondary ability will be activated next tick
         @secondary_activate = false
     end
 
@@ -148,7 +151,10 @@ class Player < Entity
     end
 
     def input(key, down)
+        # if there is no control for the key return to avoid error
         return if ! @controls.has_key? key
+
+        # update booleans according to they control mapped to the key
         case @controls[key]
         when :primary
           @primary_activate = true
@@ -184,15 +190,7 @@ class Player < Entity
         end
     end
 
-    # these just make it easier to change anim frames.
-    # this holds the textures for each animation
-    @@anims : Hash(Symbol, SF::Sprite) =
-              {:cro => @@crouching, :sta => @@standing, :wal => @@walking,
-               :run => @@running  , :jum => @@jumping , :fal => @@falling}
-    # this holds the number of frames for each animation
-    @@frames: Hash(Symbol, Int32) =
-              {:cro => 1, :sta => 6, :wal => 8,
-               :run => 8, :jum => 3, :fal => 3}
+
     def draw
         if @xmom != 0
             @facingright = @xmom > 0
@@ -208,6 +206,16 @@ class Player < Entity
         super
     end
 
+    # these just make it easier to change anim frames.
+    # this holds the textures for each animation
+    @@anims : Hash(Symbol, SF::Sprite) =
+              {:cro => @@crouching, :sta => @@standing, :wal => @@walking,
+               :run => @@running  , :jum => @@jumping , :fal => @@falling}
+    # this holds the number of frames for each animation
+    @@frames: Hash(Symbol, Int32) =
+              {:cro => 1, :sta => 6, :wal => 8,
+               :run => 8, :jum => 3, :fal => 3}
+    # sets the animations according to the above hash tables
     def anim(code : Symbol)
         @sprite = @@anims[code]
         @frames = @@frames[code]
