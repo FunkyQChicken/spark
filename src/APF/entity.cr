@@ -1,23 +1,30 @@
 
 class Entity
-    
-    @@sprite404 : SF::Sprite = get_sprite("default") 
-    
+
+    @@sprite404 : SF::Sprite = get_sprite("default")
+
     @sprite     : SF::Sprite
     @game       : Game
 
-    @width  : Int32 
+    @width  : Int32
     @height : Int32
 
+    property x : Float64,
+             y : Float64,
+             xmom : Float64,
+             ymom : Float64,
+             width : Int32,
+             height : Int32
+
     def initialize(@game)
-        # sets the default sprite 
+        # sets the default sprite
         @sprite = @@sprite404.dup
-       
-        # x and y momentum, other variables can influence speed, 
-        # but this allows other objects to easily read others speeds 
+
+        # x and y momentum, other variables can influence speed,
+        # but this allows other objects to easily read others speeds
         @xmom = 0.0
         @ymom = 0.0
-        
+
         # x and y position of the entity,
         # this is measured from the center of the sprite, not the top left corner.
         # this makes game physics harder but drawing the sprites and hitboxes easier.
@@ -37,9 +44,9 @@ class Entity
         # dimensions of the hitbox
         @width  = 0
         @height = 0
-       
+
         # animation variables,
-        # the number of frames in the animation 
+        # the number of frames in the animation
         @frames = 0
         # the width of each frame frame, not the entire spritesheet.
         @framewidth  = 0
@@ -50,24 +57,24 @@ class Entity
         # the time the current animation started, relevant for non looping anim.s
         @animstart   = 0
     end
-   
-    # sets the frame according to 
+
+    # sets the frame according to
     # framelength and frameheight
     def frame(x)
         @sprite.texture_rect = SF::IntRect.new(@framewidth * x,0,@framewidth,@frameheight)
-    end 
-   
-    # sets the current frame based off of elapsed time 
+    end
+
+    # sets the current frame based off of elapsed time
     def animate(loops = true)
         frame = @game.clock.elapsed_time.as_milliseconds * @framespeed / 1000.0
         resizeSprite
-        if (loops || frame < @frames)   
+        if (loops || frame < @frames)
             frame(frame.to_i % @frames)
         end
     end
 
 
-    # updates sprite to fit height to the sprite width given 
+    # updates sprite to fit height to the sprite width given
     def resizeSprite
         xscale  = @sprite_width * 1.0  / @framewidth
         @sprite_height = (xscale * @frameheight).to_i
@@ -90,14 +97,14 @@ class Entity
     def tick()
         true
     end
-  
+
     # would this entity clip(collide with the 'level' 'tile's) at the given coords?
     def clips(x, y)
         @game.get_level.clips(x - @width / 2, y - @height / 2, x + @width / 2, y + @height / 2)
-    end 
+    end
 
     # loads an image from the resourses folder
-    # and returns it. this method is static, 
+    # and returns it. this method is static,
     # so it can be called in any class to get any image
     def self.get_sprite(name) : SF::Sprite
         sprite = SF::Sprite.new
