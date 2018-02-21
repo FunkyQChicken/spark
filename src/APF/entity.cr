@@ -4,7 +4,7 @@ class Entity
     @@sprite404 : SF::Sprite = get_sprite("default")
 
     @sprite     : SF::Sprite
-    @game       : Game
+    @world      : World
 
     @width  : Int32
     @height : Int32
@@ -16,7 +16,7 @@ class Entity
              width : Int32,
              height : Int32
 
-    def initialize(@game)
+    def initialize(@world)
         # sets the default sprite
         @sprite = @@sprite404.dup
 
@@ -66,7 +66,7 @@ class Entity
 
     # sets the current frame based off of elapsed time
     def animate(loops = true)
-        frame = @game.clock.elapsed_time.as_milliseconds * @framespeed / 1000.0
+        frame = @world.clock.elapsed_time.as_milliseconds * @framespeed / 1000.0
         resizeSprite
         if (loops || frame < @frames)
             frame(frame.to_i % @frames)
@@ -89,7 +89,7 @@ class Entity
     # a method to draw the sprite
     def draw()
         @sprite.position = SF.vector2((@x + (@facingright ? -@sprite_width : @sprite_width)/2).to_i,(@y - @sprite_height / 2).to_i)
-        @game.drawsprite @sprite
+        @world.as(Game).drawsprite @sprite
     end
 
     # this is called each game tick
@@ -100,7 +100,7 @@ class Entity
 
     # would this entity clip(collide with the 'level' 'tile's) at the given coords?
     def clips(x, y)
-        @game.get_level.clips(x - @width / 2, y - @height / 2, x + @width / 2, y + @height / 2)
+        @world.get_level.clips(x - @width / 2, y - @height / 2, x + @width / 2, y + @height / 2)
     end
 
     # loads an image from the resourses folder

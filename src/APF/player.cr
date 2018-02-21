@@ -19,7 +19,7 @@ class Player < Entity
 
   # variables that need to be assigned a type
     @controls : Hash(SF::Keyboard::Key,Symbol)
-    def initialize(@game)
+    def initialize(world)
         super
       # these variables are documented in Entity class.
         @x = 100.0
@@ -82,11 +82,11 @@ class Player < Entity
 
       # these are the abilities.
       # primary ability
-        @primary = Teleport.new(self, @game)
+        @primary = Teleport.new(self, @world)
       # if this is true primary ability will be activated next tick
         @primary_activate = false
       # secondary ability
-        @secondary = Ability.new(self, @game)
+        @secondary = Ability.new(self, @world)
       # if this is true secondary ability will be activated next tick
         @secondary_activate = false
     end
