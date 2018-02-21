@@ -26,7 +26,7 @@ class Level
             canvas.height.times.map do |y|
                 r,g,b = canvas[x,y].to_rgb8
                 if [255, 0, 0] == [r, g, b]
-                    @solid.dup
+                    Tile.new(@solid)
                 else
                     nil
                 end
@@ -72,7 +72,7 @@ class Level
             row.each_with_index do |tile,y|
                 next if tile.nil?
                 tile.sprite.position = SF.vector2(x * @tilewidth, y * @tilewidth)
-                @game.drawsprite tile.sprite
+                tile.draw @game
             end
         end
     end
@@ -85,5 +85,16 @@ class Tile
         @sprite = Entity.get_sprite(sprite)
         scale = size / @sprite.texture_rect.width
         @sprite.scale = SF.vector2(scale, scale)
+    end
+
+    def initialize(tile : Tile)
+      @sprite = SF::Sprite.new(tile.sprite.texture.as(SF::Texture))
+      @sprite.scale = tile.sprite.scale
+    end
+
+    def draw(game)
+      scale = size / @sprite.texture_rect.width
+      @sprite.scale = {scale, scale}
+      game.drawsprite @sprite
     end
 end
