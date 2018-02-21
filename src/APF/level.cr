@@ -80,20 +80,22 @@ end
 
 # A class to represent a single block on the map/level
 class Tile
-    property sprite : SF::Sprite
-    def initialize(sprite : String, size : Float)
+    property sprite : SF::Sprite,
+             size   : Float64 
+    def initialize(sprite : String, @size)
         @sprite = Entity.get_sprite(sprite)
-        scale = size / @sprite.texture_rect.width
+        scale = @size / @sprite.texture_rect.width
         @sprite.scale = SF.vector2(scale, scale)
     end
 
     def initialize(tile : Tile)
+      @size = tile.size 
       @sprite = SF::Sprite.new(tile.sprite.texture.as(SF::Texture))
       @sprite.scale = tile.sprite.scale
     end
 
     def draw(game)
-      scale = size / @sprite.texture_rect.width
+      scale = @size / @sprite.texture_rect.width
       @sprite.scale = {scale, scale}
       game.drawsprite @sprite
     end
