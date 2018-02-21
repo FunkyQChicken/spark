@@ -8,6 +8,7 @@ class Ability
   end
 
   def activate
+    puts ["ka-pow!","bam!","zing!","blamo!","poof!","*sputter*"][rand(6)]
   end
 
   def on_cooldown?
