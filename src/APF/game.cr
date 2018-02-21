@@ -1,6 +1,7 @@
+require "./world.cr"
 
 class Game < World
-    property window : SF::RenderWindow,
+    property window : SF::RenderWindow
 
     def initialize(@window)
         super()
@@ -14,10 +15,10 @@ class Game < World
         # the smoothness of the window movement
         # higher is smoother
         @smooth = 20
-        # the wordl
-        # player one
+
         play = Player.new self
         @players << play
+        #@projectiles << Test.new self
     end
 
     def update_view()

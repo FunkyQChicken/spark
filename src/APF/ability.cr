@@ -2,7 +2,7 @@
 # by a player.
 class Ability
   @lastcast : Int32
-  def initialize(@player : Player, @game : Game)
+  def initialize(@player : Player, @game : World)
     @lastcast = @game.clock.elapsed_time.as_milliseconds
     @cooldown = 0
   end
