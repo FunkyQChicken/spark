@@ -7,7 +7,7 @@ class Level
     @right : Tile
     @left  : Tile
     @level : Array(Array(Tile | Nil))
-    @game  : Game
+    @game  : World
     property tilewidth : Float64
 
     def initialize(@game, @name = "def")
