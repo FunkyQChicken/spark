@@ -3,17 +3,6 @@ require "socket"
 
 class Window
     def initialize
-        serv = nil 
-        say "checking for server..."
-        begin
-            TCPSocket.new("localhost",2234) << "no, not a  peer"
-            say "server found."
-        rescue 
-            say "no server found, creating server..."
-            serv = Server.new
-            say "server created."
-        end
-    
         window = SF::RenderWindow.new(SF::VideoMode.new(800, 600), "CrSFML works!")
         game = Peer.new(window)
         window.framerate_limit = 60
@@ -33,8 +22,6 @@ class Window
             Fiber.yield
             # update the game
             game.tick
-            # if your the server owner, tick
-            serv.tick() if (!serv.nil?)
             # make the screen grey
             window.clear SF::Color.new(200,200,200)
             # draw the game
