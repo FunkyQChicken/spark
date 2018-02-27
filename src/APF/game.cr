@@ -27,7 +27,7 @@ class Game < World
 
     def update_view()
         size = window.size
-        scale = @window_height / size[1]
+        scale =  @window_height / size[1].to_f 
         new_width = size[0] * scale
         new_height = size[1] * scale
         new_x = 0
