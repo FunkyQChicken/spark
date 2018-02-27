@@ -14,6 +14,22 @@ run `shards install`
 and then `crystal build src/APF.cr`
 finnaly run it with `./APF`
 
+## Bugs
+Because of the number of bugs and the speed at which they are resolved  
+instead of tediously opening an issue for each one i will just keep a list  
+here until developement becomes slower. if you notice a bug though  
+please open an issue.
+1. window zooms in when it should zoom out and vice versa  
+2. players spawned across network are faster.
+
+## Planned Features  
+1. background
+2. jumping/falling player animations
+3. menu
+4. start screen
+5. damage
+6. more abilities
+
 ## Contributing
 
 1. Fork it ( https://github.com/[your-github-name]/APF/fork )
