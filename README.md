@@ -1,18 +1,18 @@
-# APF
+# Spark
 
-TODO: Write a description here
+a 2D LAN free-for-all multiplayer game!
 
 ## Installation
 
-TODO: Write installation instructions here
-
-## Usage
-
-TODO: Write usage instructions here
-
-## Development
-
-TODO: Write development instructions here
+currently only works on arch linux but soon should be fixed.  
+from the aur install:
+1. crystal 
+2. shards
+3. voidcsfml
+  
+run `shards install`
+and then `crystal build src/APF.cr`
+finnaly run it with `./APF`
 
 ## Contributing
 
@@ -24,4 +24,4 @@ TODO: Write development instructions here
 
 ## Contributors
 
-- [[your-github-name]](https://github.com/[your-github-name]) FunkyQChicken - creator, maintainer
+- [[FunkyQChicken]](https://github.com/[FunkyQChicken]) FunkyQChicken - creator, maintainer
