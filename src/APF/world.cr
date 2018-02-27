@@ -1,7 +1,6 @@
 
 class World
     property projectiles  : Array(Entity),
-             players      : Array(Player),
              level        : Level | Nil,
              clock        : SF::Clock
 
@@ -9,21 +8,14 @@ class World
 
         @clock       = SF::Clock.new
         @projectiles = [] of Entity
-        @players     = [] of Player
         @level       = Level.new self
     end
 
     def key_input(key, down : Bool)
-        @players.each do |player|
-            player.input(key, down)
-        end
     end
 
 
     def tick()
-        @players = @players.select do |player|
-            player.tick
-        end
         @projectiles = @projectiles.select do |projectile|
             projectile.tick
         end
@@ -37,5 +29,4 @@ class World
     def get_level
         level.as(Level)
     end
-
 end

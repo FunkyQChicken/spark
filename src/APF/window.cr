@@ -6,7 +6,7 @@ class Window
         say "intializing..."
         window = SF::RenderWindow.new(SF::VideoMode.new(800, 600), "CrSFML works!")
         say "window made."
-        game = Game.new(window)
+        game = Peer.new(window)
         say "game made."
         window.framerate_limit = 60
         say "done initializing."
@@ -16,7 +16,7 @@ class Window
             while event = window.poll_event()
                 case event
                 when SF::Event::KeyEvent
-                    game.key_input(event.code,event.is_a? SF::Event::KeyPressed)
+                    game.key_input(event.code.to_s,event.is_a? SF::Event::KeyPressed)
                 when SF::Event::Closed
                     window.close()
                 when SF::Event::Resized
@@ -24,6 +24,7 @@ class Window
                     window.view = SF::View.new(visible_area)
                 end
             end
+            Fiber.yield
             # update the game
             game.tick
             # make the screen grey

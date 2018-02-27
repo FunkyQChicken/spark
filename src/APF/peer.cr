@@ -8,6 +8,7 @@ class Peer < Game
         @out_socks = [] of UDPSocket
         @in_sock   = UDPSocket.new
         @port = 0
+        @other_players = {} of Socket::IPAddress => Player
         init_network()
         spawn join_swarm()
     end
@@ -39,6 +40,7 @@ class Peer < Game
         @out_socks.each do |sock|
             say "sending..."
             sock << "joining<=>"+@port.to_s+"\n"
+            sock << get_player_string
             say "done sending."
         end
         say "done alerting."
@@ -53,21 +55,42 @@ class Peer < Game
         end
     end
 
-    def process_packet(subject,body, sender)
+    def key_input(key, down)
+        super
+        str = "input<=>"+key.to_s+","+ (down ? "1" : "0")
+        @out_socks.each do |sock|
+            sock << str
+        end
+    end
+
+    def process_packet(subject, body, sender)
         case subject
         when "joining"
             say "aware of new peer, adding..."
             sock = UDPSocket.new
             sock.connect "localhost", body.to_i
             @out_socks << sock
+            sock << get_player_string
             say "done adding."
+        when "input"
+            say "INPUT: " + body
+            code, d = body.split(",")
+            player  = @other_players[sender]
+            down    = d[0].to_i == 1
+            player.input(code, down)
+        when "player"
+            say "adding player..."
+            player = Player.new(self)
+            @projectiles << player
+            @other_players[sender] = player
         end
     end
 
-    def tick
-        super
-    end
 
+
+    def get_player_string
+        "player<=>new"
+    end
     # for printing debug messages
     def say(x)
         puts "PEER: " + x

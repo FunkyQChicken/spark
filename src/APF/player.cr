@@ -9,16 +9,16 @@ class Player < Entity
     @@falling   : SF::Sprite = get_sprite("player/falling")
 
   # default player controls
-    @@controls = {SF::Keyboard::Key::D => :right,
-                  SF::Keyboard::Key::A => :left,
-                  SF::Keyboard::Key::S => :down,
-                  SF::Keyboard::Key::W => :up,
-                  SF::Keyboard::Key::J => :primary,
-                  SF::Keyboard::Key::K => :secondary
+    @@controls = {"D" => :right,
+                  "A" => :left,
+                  "S" => :down,
+                  "W" => :up,
+                  "J" => :primary,
+                  "K" => :secondary
                  }
 
   # variables that need to be assigned a type
-    @controls : Hash(SF::Keyboard::Key,Symbol)
+    @controls : Hash(String,Symbol)
     def initialize(world)
         super
       # these variables are documented in Entity class.
@@ -153,7 +153,6 @@ class Player < Entity
     def input(key, down)
         # if there is no control for the key return to avoid error
         return if ! @controls.has_key? key
-
         # update booleans according to they control mapped to the key
         case @controls[key]
         when :primary

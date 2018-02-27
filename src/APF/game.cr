@@ -1,7 +1,8 @@
 require "./world.cr"
 
 class Game < World
-    property window : SF::RenderWindow
+    property window  : SF::RenderWindow,
+             players : Array(Player)
 
     def initialize(@window)
         super()
@@ -16,9 +17,12 @@ class Game < World
         # higher is smoother
         @smooth = 20
 
-        play = Player.new self
-        @players << play
-        #@projectiles << Test.new self
+        @to_follow = [] of Entity
+        @players   = [] of Player
+
+        player = Player.new self
+        @players << player
+        @to_follow << player
     end
 
     def update_view()
@@ -28,12 +32,13 @@ class Game < World
         new_height = size[1] * scale
         new_x = 0
         new_y = 0
-        @players.each do |player|
-            new_x += player.x
-            new_y += player.y
+        @to_follow.each do |ent|
+            entity = ent.as(Entity)
+            new_x += entity.x
+            new_y += entity.y
         end
-        new_x /= players.size
-        new_y /= players.size
+        new_x /= @to_follow.size
+        new_y /= @to_follow.size
         @x = ((@x * @smooth + new_x) / (@smooth + 1)).to_i
         @y = ((@y * @smooth + new_y) / (@smooth + 1)).to_i
         rect = SF.float_rect((@x - new_width / 2).to_i, (@y - new_height / 2).to_i , new_width.to_i, (new_height).to_i)
@@ -47,10 +52,24 @@ class Game < World
         @projectiles.each do |projectile|
             projectile.draw
         end
-        @players.select do |player|
-            player.draw
+        @players.each do |player|
+          player.draw
         end
         get_level.draw
+    end
+
+    def tick
+      @players.each do |player|
+        player.tick
+      end
+      super
+    end
+
+
+    def key_input(key, down : Bool)
+        @players.each do |player|
+          player.input(key, down)
+        end
     end
 
     def drawsprite(sprite)
