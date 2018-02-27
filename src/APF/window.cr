@@ -4,7 +4,7 @@ require "socket"
 class Window
     def initialize
         say "intializing..."
-        window = SF::RenderWindow.new(SF::VideoMode.new(800, 600), "CrSFML works!")
+        window = SF::RenderWindow.new(SF::VideoMode.new(800, 600), "Spark")
         say "window made."
         game = Peer.new(window)
         say "game made."
