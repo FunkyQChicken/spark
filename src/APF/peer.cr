@@ -57,10 +57,19 @@ class Peer < Game
 
     def key_input(key, down)
         super
-        str = "input<=>"+key.to_s+","+ (down ? "1" : "0")
+        str = "in<=>"+key.to_s+","+ (down ? "1" : "0")
         @out_socks.each do |sock|
             sock << str
         end
+    end
+
+    def tick
+      super
+      @players.each_with_index do |player,i|
+        @out_socks.each do |sock|
+          sock << "up<=>" + i.to_s + "," + player.x.to_s  + "," + player.y.to_s + ","
+        end
+      end
     end
 
     def process_packet(subject, body, sender)
@@ -72,12 +81,18 @@ class Peer < Game
             @out_socks << sock
             sock << get_player_string
             say "done adding."
-        when "input"
-            say "INPUT: " + body
+        #input
+        when "in"
             code, d = body.split(",")
             player  = @other_players[sender]
             down    = d[0].to_i == 1
             player.input(code, down)
+        # update position
+        when "up"
+            ind, x, y = body.split(",")
+            player = @other_players[sender]
+            player.x = x.to_f
+            player.y = y.to_f
         when "player"
             say "adding player..."
             player = Player.new(self)
