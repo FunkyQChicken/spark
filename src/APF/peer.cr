@@ -9,7 +9,9 @@ class Peer < Game
         @in_sock   = UDPSocket.new
         @port = 0
         @local_players = [] of Player
+        # make local players so that key input can go only to them
         @local_players += @players
+        # make other players accessable by the ip that instatiated them
         @other_players = {} of Socket::IPAddress => Player
         init_network()
         spawn join_swarm()
@@ -54,14 +56,16 @@ class Peer < Game
     end
 
     def key_input(key, down)
-        super
+        @local_players.each do |player|
+            player.input(key, down)
+        end
         str = "in<=>"+key.to_s+","+ (down ? "1" : "0")
         send str
     end
 
     def tick
       super
-      @players.each_with_index do |player,i|
+      @local_players.each_with_index do |player,i|
           send "up<=>" + i.to_s + "," + player.x.to_s  + "," + player.y.to_s + ","
       end
     end
@@ -90,7 +94,7 @@ class Peer < Game
         when "player"
             say "adding player..."
             player = Player.new(self)
-            @projectiles << player
+            @players << player
             @other_players[sender] = player
         end
     end
