@@ -8,6 +8,8 @@ class Peer < Game
         @out_socks = [] of UDPSocket
         @in_sock   = UDPSocket.new
         @port = 0
+        @local_players = [] of Player
+        @local_players += @players
         @other_players = {} of Socket::IPAddress => Player
         init_network()
         spawn join_swarm()
@@ -37,12 +39,8 @@ class Peer < Game
         end
         say "done. found "+@out_socks.size.to_s+" other peer(s)"
         say "alerting them..."
-        @out_socks.each do |sock|
-            say "sending..."
-            sock << "joining<=>"+@port.to_s+"\n"
-            sock << get_player_string
-            say "done sending."
-        end
+        send "joining<=>"+@port.to_s+"\n"
+        send get_player_string
         say "done alerting."
     end
 
@@ -58,17 +56,13 @@ class Peer < Game
     def key_input(key, down)
         super
         str = "in<=>"+key.to_s+","+ (down ? "1" : "0")
-        @out_socks.each do |sock|
-            sock << str
-        end
+        send str
     end
 
     def tick
       super
       @players.each_with_index do |player,i|
-        @out_socks.each do |sock|
-          sock << "up<=>" + i.to_s + "," + player.x.to_s  + "," + player.y.to_s + ","
-        end
+          send "up<=>" + i.to_s + "," + player.x.to_s  + "," + player.y.to_s + ","
       end
     end
 
@@ -101,7 +95,21 @@ class Peer < Game
         end
     end
 
-
+    # sends a string to all the out_socks,
+    # if the sending fails it drops the sock from the list
+    # the string is received by the process_packet
+    # method
+    def send(str)
+        @out_socks = @out_socks.select do |sock|
+            error = false
+            begin
+              sock << str
+            rescue
+              error = true
+            end
+            !error
+        end
+    end
 
     def get_player_string
         "player<=>new"
