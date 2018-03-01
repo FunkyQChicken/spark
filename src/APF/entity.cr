@@ -9,12 +9,14 @@ class Entity
     @width  : Int32
     @height : Int32
 
-    property x : Float64,
-             y : Float64,
-             xmom : Float64,
-             ymom : Float64,
-             width : Int32,
-             height : Int32
+    property x      : Float64,
+             y      : Float64,
+             xmom   : Float64,
+             ymom   : Float64,
+             width  : Int32,
+             height : Int32,
+             facingright : Bool
+
 
     def initialize(@world)
         # sets the default sprite
@@ -60,8 +62,13 @@ class Entity
 
     # sets the frame according to
     # framelength and frameheight
-    def frame(x)
+    def frame(x) : Nil
         @sprite.texture_rect = SF::IntRect.new(@framewidth * x,0,@framewidth,@frameheight)
+    end
+
+    # adds entity to the world's projectile list
+    def join_world : Nil
+      @world.projectiles << self
     end
 
     # sets the current frame based off of elapsed time
