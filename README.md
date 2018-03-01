@@ -19,7 +19,9 @@ Because of the number of bugs and the speed at which they are resolved
 instead of tediously opening an issue for each one i will just keep a list  
 here until developement becomes slower. if you notice a bug though  
 please open an issue.
-*none currently*
+1. identifies ports as other peers that aren't
+2. sometimes can constantly jump
+
 ## Planned Features  
 1. background
 2. jumping/falling player animations
