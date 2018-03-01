@@ -93,7 +93,7 @@ class Peer < Game
             player.y = y.to_f
         when "player"
             say "adding player..."
-            player = Player.new(self)
+            player = Player.from_string(body, self)
             @players << player
             @other_players[sender] = player
         end
@@ -116,8 +116,10 @@ class Peer < Game
     end
 
     def get_player_string
-        "player<=>new"
+        player = @local_players[0]
+        "player<=>" + player.get_string
     end
+
     # for printing debug messages
     def say(x)
         puts "PEER: " + x
