@@ -17,8 +17,10 @@ class Player < Entity
                   "K" => :secondary
                  }
 
-  # variables that need to be assigned a type
-    @controls : Hash(String,Symbol)
+    # variables that need to be assigned a type
+    @controls  : Hash(String,Symbol)
+    @primary   : Ability | Nil
+    @secondary : Ability | Nil
     def initialize(world)
         super
       # these variables are documented in Entity class.
@@ -86,7 +88,7 @@ class Player < Entity
       # if this is true primary ability will be activated next tick
         @primary_activate = false
       # secondary ability
-        @secondary = Ability.new(self, @world)
+        @secondary = FireBall.new(self, @world)
       # if this is true secondary ability will be activated next tick
         @secondary_activate = false
     end
@@ -146,9 +148,14 @@ class Player < Entity
         else
             @x = newx
         end
-
         return super
     end
+
+    def set_abilities(primary, secondary)
+        @primary   = Ability.get_ability(primary,   self, @world)
+        @secondary = Ability.get_ability(secondary, self, @world)
+    end
+
 
     def input(key, down)
         # if there is no control for the key return to avoid error
@@ -218,5 +225,18 @@ class Player < Entity
     def anim(code : Symbol)
         @sprite = @@anims[code]
         @frames = @@frames[code]
+    end
+
+    # when sending a player across the network this is the string sent
+    def get_string : String
+        [@primary,@secondary].map {|e| e.class.to_s}.join(",")
+    end
+
+    # turns the string sent by get_string to a player
+    def self.from_string(str : String, world) : Player
+        ret = Player.new world
+        p, s = str.split(",")
+        ret.set_abilities(p, s)
+        return ret
     end
 end
