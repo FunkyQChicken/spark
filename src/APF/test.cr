@@ -1,13 +1,13 @@
 
 class Test < Entity
-    @@texture :  SF::Sprite = get_sprite("test")
-    def initialize(game) 
+    #@@texture :  SF::Sprite = get_sprite("test")
+    def initialize(game)
         super
         @x = 420.0
         @y = 220.0
         @width = 300
         @height = 300
-        @sprite = @@texture
+    #    @sprite = @@texture
         @framewidth = 64
         @frameheight = 64
         @framespeed = 10
@@ -19,5 +19,4 @@ class Test < Entity
        animate
        super
     end
-end 
-   
+end
