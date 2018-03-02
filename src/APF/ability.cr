@@ -3,7 +3,9 @@ require "./entity.cr"
 # this is the ability calss, an ability is an attack that is contained
 # by a player.
 class Ability
+  # the last time the ability was cast, usefull for cooldowns.
   @last_cast : Int32
+
   def initialize(@player : Player, @world : World)
     @last_cast = time
     @cooldown = 0
@@ -17,32 +19,40 @@ class Ability
     time - @last_cast < @cooldown
   end
 
-  # just makes the cod elook neater
+  # returns the current time is as_milliseconds
+  # just makes the code look neater (less boilerplatey)
   def time
     @world.clock.elapsed_time.as_milliseconds
   end
 
+  # IDEA: remove as is really simple
+  # sets last cast to now
   def reset_cooldown : Nil
     @last_cast = time
   end
 
+  # takes a string and returns an ability with that class name
+  # constructed with the given world and player.
   def self.get_ability(str, player, world) : Ability
     return case str
     when "Ability"
       Ability
     when "Teleport"
       Teleport
+    when "FireBall"
+      FireBall
     else
       Ability
     end.new(player, world)
   end
 end
 
+# teleport to a random location around you.
 class Teleport < Ability
   def initialize(player, game)
     super
     @cooldown = 1000
-    @range = 500
+    @range = 1000
   end
 
   def get_random_coord

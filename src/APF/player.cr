@@ -129,6 +129,7 @@ class Player < Entity
         newx = @xmom + @ground_to_air_xmom + @x
         newy = @ymom + @y
       # apply them if they don't run into anything
+      # if they do, apply the mom to 0
         if clips(@x, newy)
             if @ymom > 0
                 @air = false
@@ -151,12 +152,16 @@ class Player < Entity
         return super
     end
 
+    # allows the setting fo the abilities by names of the classes
+    # this is used by creating the player from over the network.
     def set_abilities(primary, secondary)
         @primary   = Ability.get_ability(primary,   self, @world)
         @secondary = Ability.get_ability(secondary, self, @world)
     end
 
-
+    #takes key input and updates movement booleans.
+    # this should not directly impact non booleans because
+    # keys can be spammed, and key pressing speed shouldnt effect anything
     def input(key, down)
         # if there is no control for the key return to avoid error
         return if ! @controls.has_key? key
@@ -170,7 +175,7 @@ class Player < Entity
             @jump = !@space
             @space = down
         when :down
-
+          # TODO: Add crouching logic here
         when :left
             if down
                 return if @lefthold
@@ -196,7 +201,9 @@ class Player < Entity
         end
     end
 
-
+    # draw the player, it also chooses the animation,
+    # no variables should be changed here because
+    # framerate should only impact framerate, nothing else.
     def draw
         if @xmom != 0
             @facingright = @xmom > 0
@@ -227,7 +234,8 @@ class Player < Entity
         @frames = @@frames[code]
     end
 
-    # when sending a player across the network this is the string sent
+    # when sending a player across the network
+    # this is part of the string sent
     def get_string : String
         [@primary,@secondary].map {|e| e.class.to_s}.join(",")
     end
