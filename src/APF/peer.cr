@@ -67,8 +67,8 @@ class Peer < Game
 
     # applies a key input to local_players, not players, and sends the
     # input to peers
-    @local_players.each do |player|
     def key_input(key, down)
+        @local_players.each do |player|
             player.input(key, down)
         end
         str = "in<=>"+key.to_s+","+ (down ? "1" : "0")
