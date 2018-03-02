@@ -1,3 +1,10 @@
+## disclaimer
+
+currently really early into developement, right now   
+it is not much more than a proof of concept. as soon  
+as I consider it a playable game i will update this  
+disclaimer.
+
 # Spark
 
 a 2D LAN free-for-all multiplayer game!
@@ -16,7 +23,7 @@ finnaly run it with `./APF`
 
 ## Bugs
 Because of the number of bugs and the speed at which they are resolved  
-instead of tediously opening an issue for each one i will just keep a list  
+instead of tediously opening an issue for each one I will just keep a list  
 here until developement becomes slower. if you notice a bug though  
 please open an issue.
 1. identifies ports as other peers that aren't
@@ -30,6 +37,8 @@ please open an issue.
 5. damage
 6. more abilities
 7. actually make it LAN, currently it is just local host.
+8. bundle crsfml with the game to make an easily distributable binary
+9. 
 
 ## Contributing
 
