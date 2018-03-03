@@ -3,6 +3,14 @@ require "socket"
 
 
 class Peer < Game
+
+    # Randomly chosen, idk how to choose a port.
+    @@lan_notify_port = 17322
+    @@connection_port = 34675
+
+    # string sent to notify that there is a new game
+    @@notify_string = "new game created!!"
+
     def initialize(@window)
         super
         # sockets to send info to
@@ -23,38 +31,31 @@ class Peer < Game
         spawn join_swarm()
     end
 
-    # finds all peers and adds them to in_socks while
-    # alerting them of its existence
     def init_network
-        say "initializing connections..."
-        bound = false
-        x = 10000
-        port = x
-        100.times do
-            sock = UDPSocket.new
-            begin
-                sock.bind "localhost", x
-                if bound
-                    sock.close
-                else
-                    @in_sock = sock
-                    @port = x
-                    bound = true
-                end
-            rescue
-                sock.connect "localhost", x
-                @out_socks << sock
-            end
-            x += 1
-        end
-        say "done. found "+@out_socks.size.to_s+" other peer(s)"
-        say "alerting them..."
-        # request joining and then send them the player
-        send "joining<=>"+@port.to_s+"\n"
-        send get_player_string
-        say "done alerting."
+        say "broadcasting..."
+
+        broadcast = UDPSocket.new
+        broadcast.broadcast = true
+        broadcast.connect "255.255.255.255", @@lan_notify_port
+
+        @in_sock.bind broadcast.local_address.address, @@connection_port
+
+        broadcast.send(@@notify_string)
+
+        spawn listen_for_new_games
     end
 
+    def listen_for_new_games
+        listener = UDPSocket.new
+        listener.bind "0.0.0.0", @@lan_notify_port
+        loop do
+            message, sender = listener.receive
+            if message == @@notify_string
+                process_packet("joining","",sender)
+                @out_socks[-1] << "joining<=>lol, pointless text"
+            end
+        end
+    end
     # continuosly take input from peers and process it
     def join_swarm
         say "joining swarm."
@@ -91,7 +92,7 @@ class Peer < Game
         when "joining"
             say "aware of new peer, adding..."
             sock = UDPSocket.new
-            sock.connect "localhost", body.to_i
+            sock.connect sender.address, @@connection_port
             @out_socks << sock
             sock << get_player_string
             say "done adding."
