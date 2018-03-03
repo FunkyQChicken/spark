@@ -26,8 +26,7 @@ Because of the number of bugs and the speed at which they are resolved
 instead of tediously opening an issue for each one I will just keep a list  
 here until developement becomes slower. if you notice a bug though  
 please open an issue.
-1. identifies ports as other peers that aren't
-2. sometimes can constantly jump
+1. sometimes can constantly jump
 
 ## Planned Features  
 1. background
@@ -36,9 +35,7 @@ please open an issue.
 4. start screen
 5. damage
 6. more abilities
-7. actually make it LAN, currently it is just local host.
 8. bundle crsfml with the game to make an easily distributable binary
-9. 
 
 ## Contributing
 
