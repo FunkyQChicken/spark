@@ -168,9 +168,9 @@ class Player < Entity
         # update booleans according to they control mapped to the key
         case @controls[key]
         when :primary
-          @primary_activate = true
+          @primary_activate = down
         when :secondary
-          @secondary_activate = true
+          @secondary_activate = down
         when :up
             @jump = !@space
             @space = down
