@@ -23,7 +23,7 @@ class Player < Entity
     @secondary : Ability | Nil
     def initialize(world)
         super
-      # these variables are documented in Entity class.
+        # these variables are documented in Entity class.
         @x = 100.0
         @y = 100.0
         @framewidth  = 64
@@ -35,66 +35,68 @@ class Player < Entity
         anim :wal
         resizeSprite
 
-      # set the default controls
+        # set the default controls
         @controls = @@controls.dup
 
-      # are you going right?
+        # are you going right?
         @right = false
-      # are you going left?
+        # are you going left?
         @left = false
-      # holding left key?
+        # holding left key?
         @lefthold = false
-      # holding right key?
+        # holding right key?
         @righthold = false
-      # are you holding down the spacebar?
+        # are you holding down the spacebar?
         @space = false
-      # are you airborne?
+        # are you airborne?
         @air = true
 
-      # the maximum speed in the ground and air
+        # the maximum speed in the ground and air
         @max_speed = 8.0
 
-      # the higher it is the slower the speedup, 0 is instantanious
+        # the higher it is the slower the speedup, 0 is instantanious
+        # speedup for while walking
         @accel_facor_ground = 5.0
+        # speedup while falling / in the air
         @accel_facor_air    = 20.0
 
-      # if your airborn we store your xmom when you left the ground a continue to add it on top
-      # of your new xmom
+        # if your airborn we store your xmom when you left the ground a continue to add it on top
+        # of your new xmom
         @ground_to_air_xmom = 0.0
 
-      # gravity variables, despite the different name format,
-      # gravity is calculated exactly the same way as movement.
+        # gravity variables, despite the different name format,
+        # gravity is calculated exactly the same way as movement.
         @max_fall_speed = 25.0
-      # this is equivalent to accel_factor but for falling, this is
-      # factor used when you are holding down the spacebar.
+        # this is equivalent to accel_factor but for falling, this is
+        # factor used when you are holding down the spacebar.
         @fall_factor_jump = 70.1
-      # this is the same as @fall_factor_jump, except it is used when you aren't
-      # holding down the spacebar.
+        # this is the sam  e as @fall_factor_jump, except it is used when you aren't
+        # holding down the spacebar.
         @fall_factor_norm = 50.1
 
-      # the speed of your ymom when you jump,
+        # the speed of your ymom when you jump,
         @jump_speed = -12.0
-      # number of jumps you have between hitting the ground
+        # number of jumps you have between hitting the ground
         @max_jumps = 3
-      # current number of used jumps
+        # current number of used jumps
         @used_jumps = 0
 
-      # if true then the player will jump next tick if able to and set this to false.
+        # if true then the player will jump next tick if able to and set this to false.
         @jump = false
 
-      # these are the abilities.
-      # primary ability
+        # these are the abilities.
+        # primary ability
         @primary = Teleport.new(self, @world)
-      # if this is true primary ability will be activated next tick
+        # if this is true primary ability will be activated next tick
         @primary_activate = false
-      # secondary ability
+        # secondary ability
         @secondary = FireBall.new(self, @world)
-      # if this is true secondary ability will be activated next tick
+        # if this is true secondary ability will be activated next tick
         @secondary_activate = false
     end
 
     def tick : Bool
-      # process @jump if its true and jump if possible
+        # process @jump if its true and jump if possible
         if @jump
             if @used_jumps < @max_jumps
                 @used_jumps += 1
@@ -104,7 +106,7 @@ class Player < Entity
             @jump = false
         end
 
-      # cast/activate abilities if needed
+        # cast/activate abilities if needed
         if @primary_activate
           @primary.as(Ability).activate
           @primary_activate  = false
@@ -114,22 +116,22 @@ class Player < Entity
           @secondary_activate = false
         end
 
-      # acceleration factor and the max speed
+        # acceleration factor and the max speed
         speed = @max_speed
         accel = @air ? @accel_facor_air : @accel_facor_ground
-      # pick the gravity based on weather or not your holding down the jump key
+        # pick the gravity based on weather or not your holding down the jump key
         fallaccel = @space ? @fall_factor_jump : @fall_factor_norm
         @ymom = ((@ymom * fallaccel) + @max_fall_speed) / (fallaccel + 1)
-      # going to the left means that you want to be going negative
+        # going to the left means that you want to be going negative
         speed *= -1 if @left
-      # update x momentum based of acceleration factor and if they are trying to move
+        # update x momentum based of acceleration factor and if they are trying to move
         @xmom = @right || @left ? ((@xmom * accel) + speed)/(accel + 1) : (@xmom * accel) / (accel + 1)
 
-      # calculate the new coords,
+        # calculate the new coords,
         newx = @xmom + @ground_to_air_xmom + @x
         newy = @ymom + @y
-      # apply them if they don't run into anything
-      # if they do, apply the mom to 0
+        # apply them if they don't run into anything
+        # if they do, apply the mom to 0
         if clips(@x, newy)
             if @ymom > 0
                 @air = false
