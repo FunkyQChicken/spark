@@ -12,7 +12,7 @@ class Game < World
         # the height that the window should show,
         # not its actual height, it is its relative height
         # to the world
-        @window_height = 900
+        @window_height = 600
         # the location of the center of the window
         @x = 0
         @y = 0
