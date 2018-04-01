@@ -1,6 +1,6 @@
-require "./APF/*"
+require "./spark/*"
 require "crsfml"
 
-module APF
+module Spark
     Window.new()
 end

@@ -1,7 +1,7 @@
 ## disclaimer
 
-currently really early into developement, right now   
-it is not much more than a proof of concept. as soon  
+Currently really early into developement, right now   
+it is not much more than a proof of concept. As soon  
 as I consider it a playable game i will update this  
 disclaimer.
 
@@ -11,15 +11,15 @@ a 2D LAN free-for-all multiplayer game!
 
 ## Installation
 
-currently only works on arch linux but soon should be fixed.  
-from the aur install:
+currently only works on linux but soon should be fixed.  
+install these packages:
 1. crystal 
 2. shards
 3. voidcsfml
   
 run `shards install`
-and then `crystal build src/APF.cr`
-finnaly run it with `./APF`
+and then `crystal build src/spark.cr`
+finaly run it with `./spark`
 
 ## Bugs
 Because of the number of bugs and the speed at which they are resolved  
@@ -39,7 +39,7 @@ please open an issue.
 
 ## Contributing
 
-1. Fork it ( https://github.com/[your-github-name]/APF/fork )
+1. Fork it ( https://github.com/FunkyQChicken/spark/fork )
 2. Create your feature branch (git checkout -b my-new-feature)
 3. Commit your changes (git commit -am 'Add some feature')
 4. Push to the branch (git push origin my-new-feature)
@@ -47,4 +47,4 @@ please open an issue.
 
 ## Contributors
 
-- [[FunkyQChicken]](https://github.com/[FunkyQChicken]) FunkyQChicken - creator, maintainer
+- [FunkyQChicken](https://github.com/FunkyQChicken) FunkyQChicken - creator, maintainer

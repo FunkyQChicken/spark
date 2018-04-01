@@ -1,4 +1,4 @@
-name: APF
+name: spark
 version: 0.1.0
 
 authors:
@@ -6,7 +6,7 @@ authors:
 
 targets:
   APF:
-    main: src/APF.cr
+    main: src/spark.cr
 
 crystal: 0.24.1
 
