@@ -21,7 +21,7 @@ class Level
 
   # return the level built from the map.png in the correct level file.
     def buildlevel()
-        canvas = StumpyPNG.read("recources/levels/"+@name+"/map.png")
+        canvas = StumpyPNG.read("resources/levels/"+@name+"/map.png")
         canvas.width.times.map do |x|
             canvas.height.times.map do |y|
                 r,g,b = canvas[x,y].to_rgb8
