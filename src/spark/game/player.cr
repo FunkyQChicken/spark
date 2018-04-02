@@ -1,6 +1,6 @@
 
 class Player < Entity
-  # the various player animations
+    # the various player animations
     @@crouching : SF::Sprite = get_sprite("player/crouching")
     @@standing  : SF::Sprite = get_sprite("player/idling")
     @@walking   : SF::Sprite = get_sprite("player/walking")
@@ -8,7 +8,7 @@ class Player < Entity
     @@jumping   : SF::Sprite = get_sprite("player/jumping")
     @@falling   : SF::Sprite = get_sprite("player/falling")
 
-  # default player controls
+    # default player controls
     @@controls = {"D" => :right,
                   "A" => :left,
                   "S" => :down,
@@ -94,7 +94,7 @@ class Player < Entity
     end
 
     def tick : Bool
-      # process @jump if its true and jump if possible
+        # process @jump if its true and jump if possible
         if @jump
             if @used_jumps < @max_jumps
                 @used_jumps += 1
@@ -104,7 +104,7 @@ class Player < Entity
             @jump = false
         end
 
-      # cast/activate abilities if needed
+        # cast/activate abilities if needed
         if @primary_activate
           @primary.as(Ability).activate
           @primary_activate  = false
@@ -114,22 +114,22 @@ class Player < Entity
           @secondary_activate = false
         end
 
-      # acceleration factor and the max speed
+        # acceleration factor and the max speed
         speed = @max_speed
         accel = @air ? @accel_facor_air : @accel_facor_ground
-      # pick the gravity based on weather or not your holding down the jump key
+        # pick the gravity based on weather or not your holding down the jump key
         fallaccel = @space ? @fall_factor_jump : @fall_factor_norm
         @ymom = ((@ymom * fallaccel) + @max_fall_speed) / (fallaccel + 1)
-      # going to the left means that you want to be going negative
+        # going to the left means that you want to be going negative
         speed *= -1 if @left
-      # update x momentum based of acceleration factor and if they are trying to move
+        # update x momentum based of acceleration factor and if they are trying to move
         @xmom = @right || @left ? ((@xmom * accel) + speed)/(accel + 1) : (@xmom * accel) / (accel + 1)
 
-      # calculate the new coords,
+        # calculate the new coords,
         newx = @xmom + @ground_to_air_xmom + @x
         newy = @ymom + @y
-      # apply them if they don't run into anything
-      # if they do, apply the mom to 0
+        # apply them if they don't run into anything
+        # if they do, apply the mom to 0
         if clips(@x, newy)
             if @ymom > 0
                 @air = false
@@ -159,7 +159,7 @@ class Player < Entity
         @secondary = Ability.get_ability(secondary, self, @world)
     end
 
-    #takes key input and updates movement booleans.
+    # takes key input and updates movement booleans.
     # this should not directly impact non booleans because
     # keys can be spammed, and key pressing speed shouldnt effect anything
     def input(key, down)
