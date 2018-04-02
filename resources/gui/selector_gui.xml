@@ -1,0 +1,12 @@
+
+<full dims = "50,50,100,100" type = "panel">
+<selector dims = "50,50,50,90" type = "panel">
+    <container dims = "50,65,70,80">
+      <type      dims = "50,0,80,10"  type = "selector">offline online</type>
+      <color     dims = "50,20,80,10" type = "selector"/>
+      <primary   dims = "50,40,80,10" type = "selector"></primary>
+      <secondary dims = "50,60,80,10" type = "selector"/>
+      <start     dims = "50,80,50,10" type = "button_text">START</start>
+    </container>
+</selector>
+</full>

@@ -23,7 +23,7 @@ class Player < Entity
     @secondary : Ability | Nil
     def initialize(world)
         super
-      # these variables are documented in Entity class.
+        # these variables are documented in Entity class.
         @x = 100.0
         @y = 100.0
         @framewidth  = 64
@@ -35,61 +35,61 @@ class Player < Entity
         anim :wal
         resizeSprite
 
-      # set the default controls
+        # set the default controls
         @controls = @@controls.dup
 
-      # are you going right?
+        # are you going right?
         @right = false
-      # are you going left?
+        # are you going left?
         @left = false
-      # holding left key?
+        # holding left key?
         @lefthold = false
-      # holding right key?
+        # holding right key?
         @righthold = false
-      # are you holding down the spacebar?
+        # are you holding down the spacebar?
         @space = false
-      # are you airborne?
+        # are you airborne?
         @air = true
 
-      # the maximum speed in the ground and air
+        # the maximum speed in the ground and air
         @max_speed = 8.0
 
-      # the higher it is the slower the speedup, 0 is instantanious
+        # the higher it is the slower the speedup, 0 is instantanious
         @accel_facor_ground = 5.0
         @accel_facor_air    = 20.0
 
-      # if your airborn we store your xmom when you left the ground a continue to add it on top
-      # of your new xmom
+        # if your airborn we store your xmom when you left the ground a continue to add it on top
+        # of your new xmom
         @ground_to_air_xmom = 0.0
 
-      # gravity variables, despite the different name format,
-      # gravity is calculated exactly the same way as movement.
+        # gravity variables, despite the different name format,
+        # gravity is calculated exactly the same way as movement.
         @max_fall_speed = 25.0
-      # this is equivalent to accel_factor but for falling, this is
-      # factor used when you are holding down the spacebar.
+        # this is equivalent to accel_factor but for falling, this is
+        # factor used when you are holding down the spacebar.
         @fall_factor_jump = 70.1
-      # this is the same as @fall_factor_jump, except it is used when you aren't
-      # holding down the spacebar.
+        # this is the same as @fall_factor_jump, except it is used when you aren't
+        # holding down the spacebar.
         @fall_factor_norm = 50.1
 
-      # the speed of your ymom when you jump,
+        # the speed of your ymom when you jump,
         @jump_speed = -12.0
-      # number of jumps you have between hitting the ground
+        # number of jumps you have between hitting the ground
         @max_jumps = 3
-      # current number of used jumps
+        # current number of used jumps
         @used_jumps = 0
 
-      # if true then the player will jump next tick if able to and set this to false.
+        # if true then the player will jump next tick if able to and set this to false.
         @jump = false
 
-      # these are the abilities.
-      # primary ability
+        # these are the abilities.
+        # primary ability
         @primary = Teleport.new(self, @world)
-      # if this is true primary ability will be activated next tick
+        # if this is true primary ability will be activated next tick
         @primary_activate = false
-      # secondary ability
+        # secondary ability
         @secondary = FireBall.new(self, @world)
-      # if this is true secondary ability will be activated next tick
+        # if this is true secondary ability will be activated next tick
         @secondary_activate = false
     end
 

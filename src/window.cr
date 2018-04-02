@@ -1,25 +1,30 @@
 require "crsfml/window"
 require "socket"
+require "./spark/*"
 
 class Window
     def initialize
         say "intializing..."
         window = SF::RenderWindow.new(SF::VideoMode.new(800, 600), "Spark")
-        # maximum framerate to prevent game from eating up cpu
+        # maximum framerate to prevent gui from eating up cpu
         window.framerate_limit = 60
         say "window made."
-        # this is the game (Peer < Game < World) and takes ticks and draw n' stuff.
-        game = Peer.new(window)
-        say "game made."
+        # this is the gui (Peer < Game < World) and takes ticks and draw n' stuff.
+        gui : GUI = Selector_GUI.new(window)
+        say "gui made."
         say "done initializing."
-        say "entering game loop."
+        say "entering gui loop."
         while window.open?
-            #take game input
+            #take gui input
             while event = window.poll_event()
                 case event
-                # every keypress gets sent to the game.
+                # every keypress gets sent to the gui.
                 when SF::Event::KeyEvent
-                    game.key_input(event.code.to_s,event.is_a? SF::Event::KeyPressed)
+                    gui.key_input(event.code.to_s,event.is_a? SF::Event::KeyPressed)
+                when SF::Event::MouseButtonPressed
+                    gui.mouse_click(event.x, event.y)
+                when SF::Event::MouseButtonReleased
+                    gui.mouse_release
                 # close the window when closed
                 when SF::Event::Closed
                     window.close()
@@ -32,12 +37,12 @@ class Window
             # allow other fibers a chance to process.
             # namely the join_swarm method in peer.
             Fiber.yield
-            # update the game
-            game.tick
+            # update the gui
+            gui =  gui.tick
             # make the screen grey/gray/gerae as default color
             window.clear SF::Color.new(200,200,200)
-            # draw the game
-            game.draw
+            # draw the gui
+            gui.draw
             # update the window
             window.display()
         end

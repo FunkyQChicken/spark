@@ -1,6 +1,6 @@
-require "./spark/*"
+require "./window"
 require "crsfml"
 
 module Spark
-    Window.new()
+  Window.new()
 end
