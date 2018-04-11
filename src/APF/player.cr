@@ -52,11 +52,11 @@ class Player < Entity
         @air = true
 
         # the maximum speed in the ground and air
-        @max_speed = 8.0
+        @max_speed = 10.0
 
         # the higher it is the slower the speedup, 0 is instantanious
         # speedup for while walking
-        @accel_facor_ground = 5.0
+        @accel_facor_ground = 7.0
         # speedup while falling / in the air
         @accel_facor_air    = 20.0
 
@@ -100,7 +100,7 @@ class Player < Entity
         if @jump
             if @used_jumps < @max_jumps
                 @used_jumps += 1
-                @ymom = @jump_speed
+                @ymom = [@ymom, @jump_speed].min
                 @air = true
             end
             @jump = false
@@ -147,7 +147,13 @@ class Player < Entity
             @y = newy
         end
         if clips(newx, @y)
-            @xmom = 0.0
+            # wall jump if going fast enough
+            if @xmom.abs > @max_speed * 0.95
+                @xmom = @xmom * -0.9
+                @ymom = [@ymom, @jump_speed].min
+            else 
+                @xmom = 0.0
+            end
         else
             @x = newx
         end
