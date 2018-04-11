@@ -99,10 +99,13 @@ class Player < Entity
         # process @jump if its true and jump if possible
         if @jump
             if @used_jumps < @max_jumps
+                if @used_jumps == 0
+                    @xmom *= 1.2
+                end
                 @used_jumps += 1
                 @ymom = [@ymom, @jump_speed].min
                 @air = true
-            end
+            end 
             @jump = false
         end
 
@@ -148,7 +151,7 @@ class Player < Entity
         end
         if clips(newx, @y)
             # wall jump if going fast enough
-            if @xmom.abs > @max_speed * 0.95
+            if @xmom.abs > @max_speed# * 0.99
                 @xmom = @xmom * -0.9
                 @ymom = [@ymom, @jump_speed].min
             else 
