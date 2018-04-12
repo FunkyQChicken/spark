@@ -16,7 +16,7 @@ class Peer < Game
         # sockets to send info to
         @out_socks = [] of UDPSocket
         # socket to recieve info from
-        @in_sock   = UDPSocket.new
+        @in_sock = UDPSocket.new
         # the port that the peer will listen on
         @port = 0
         # the players local to this game, excludes players sent from other games.

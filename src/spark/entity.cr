@@ -117,7 +117,7 @@ class Entity
     # so it can be called in any class to get any image
     def self.get_sprite(name) : SF::Sprite
         sprite = SF::Sprite.new
-        sprite.texture =  SF::Texture.from_file("./recources/"+name+".png")
+        sprite.texture =  SF::Texture.from_file("./resources/"+name+".png")
         return sprite
     end
 end
