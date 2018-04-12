@@ -14,7 +14,7 @@ class Window
         say "done initializing."
         say "entering game loop."
         while window.open?
-            #take game input
+            # take game input
             while event = window.poll_event()
                 case event
                 # every keypress gets sent to the game.
@@ -44,7 +44,7 @@ class Window
     end
 
     # for a debug log of sorts. allows easy identification of where the
-    # error came from.
+    # error came from. (in theory at least)
     def say(x)
         puts "START: " + x
     end
