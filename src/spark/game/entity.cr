@@ -16,7 +16,7 @@ class Entity
              width  : Int32,
              height : Int32,
              facingright : Bool
-
+             upsidedown  : Bool 
 
     def initialize(@world)
         # sets the default sprite
@@ -42,6 +42,8 @@ class Entity
 
         # is the sprite facing right?
         @facingright = false
+        # is the sprite upside down?
+        @upsidedown  = false
 
         # dimensions of the hitbox
         @width  = 0
@@ -86,7 +88,7 @@ class Entity
         xscale  = @sprite_width * 1.0  / @framewidth
         @sprite_height = (xscale * @frameheight).to_i
         # need o reverse x if facing left
-        @sprite.scale = SF.vector2(@facingright ? xscale : -xscale,xscale);
+        @sprite.scale = SF.vector2(@facingright ? xscale : -xscale,@upsidedown ? -xscale : xscale);
     end
 
     # a method to take key input
@@ -95,7 +97,7 @@ class Entity
 
     # a method to draw the sprite
     def draw()
-        @sprite.position = SF.vector2((@x + (@facingright ? -@sprite_width : @sprite_width)/2).to_i,(@y - @sprite_height / 2).to_i)
+        @sprite.position = SF.vector2((@x + (@facingright ? -@sprite_width : @sprite_width) / 2).to_i,(@y - (@upsidedown ? -@sprite_height : @sprite_height) / 2).to_i)
         @world.as(Game).drawsprite @sprite
     end
 

@@ -47,6 +47,11 @@ class Ability
   end
 end
 
+
+
+
+
+
 # teleport to a random location around you.
 class Teleport < Ability
   def initialize(player, game)
@@ -77,6 +82,11 @@ class Teleport < Ability
   end
 end
 
+
+
+
+
+
 class FireBall < Ability
   # short for projectile
   class Proj < Entity
@@ -84,16 +94,19 @@ class FireBall < Ability
         super(world)
         @x    = @player.x
         @y    = @player.y
-        @facingright = @player.facingright
+        # technically this 'facing right' is actually keeping track of 'facing left'
+        # but im too lazy to change the texture... ill just add a todo
+        # TODO: fix the texture
+        @facingright = !@player.facingright
         @sprite = Entity.get_sprite("abilities/fireball")
         # the speed of the projectile
         @xmom = 10.0
 
         # reverse momentum if facig the other way
-        @xmom *= -1 if !@facingright
+        @xmom *= -1 if @facingright
         @xmom += player.xmom/2
         # animation/texture settings, see Entity for documentation
-        @sprite_width = 20
+        @sprite_width = 25
 
         # dimensions of the hitbox
         @width  = 20
@@ -106,9 +119,14 @@ class FireBall < Ability
         @frameheight = 15
         @framespeed  = 0 #irrelevant currently
 
-        frame(1)
+        frame(0)
 
         join_world
+    end
+
+    def draw
+      resizeSprite
+      super
     end
 
     def tick
@@ -117,24 +135,27 @@ class FireBall < Ability
     end
   end
 
+  @max_time : Int32
   def initialize(player, world)
     super
     @time_accumulated = 0
     # cooldown per shot
-    @mini_cooldown = 500
+    @mini_cooldown = 1000
     # the number of charges that can be built up
     @num_of_casts = 4
     # the maximum that time_accumulated is allowed to be
-    @max_time = 12
     @max_time = @num_of_casts * @mini_cooldown
   end
 
   def activate : Nil
     # add time since last cast to time_accumulated and cut it off
     # if it is above the allowed maximum
-    @time_accumulated =
-    [@time_accumulated + (time - @last_cast), @max_time].min
+    @time_accumulated += (time - @last_cast)
+    if @time_accumulated > @max_time
+      @time_accumulated = @max_time
+    end
     return if @time_accumulated < @mini_cooldown
+    @last_cast = time
     @time_accumulated -= @mini_cooldown
     Proj.new(@world, @player)
   end

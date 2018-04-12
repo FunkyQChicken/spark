@@ -49,7 +49,7 @@ class Window
     end
 
     # for a debug log of sorts. allows easy identification of where the
-    # error came from.
+    # error came from. (in theory at least)
     def say(x)
         puts "START: " + x
     end

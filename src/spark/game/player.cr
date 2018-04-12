@@ -52,15 +52,18 @@ class Player < Entity
         @air = true
 
         # the maximum speed in the ground and air
-        @max_speed = 8.0
+        @max_speed = 10.0
 
         # the higher it is the slower the speedup, 0 is instantanious
-        @accel_facor_ground = 5.0
+        # speedup for while walking
+        @accel_facor_ground = 7.0
+        # speedup while falling / in the air
         @accel_facor_air    = 20.0
 
-        # if your airborn we store your xmom when you left the ground a continue to add it on top
-        # of your new xmom
-        @ground_to_air_xmom = 0.0
+        # the percent of the max speed that the player needs to go to
+        # 'run' (switch to the running animation) and be able to ceiling run
+        @percent_speed_running = 0.9
+
 
         # gravity variables, despite the different name format,
         # gravity is calculated exactly the same way as movement.
@@ -71,6 +74,8 @@ class Player < Entity
         # this is the same as @fall_factor_jump, except it is used when you aren't
         # holding down the spacebar.
         @fall_factor_norm = 50.1
+        # is the player ceiling running?
+        @ceiling_running = false
 
         # the speed of your ymom when you jump,
         @jump_speed = -12.0
@@ -78,6 +83,8 @@ class Player < Entity
         @max_jumps = 3
         # current number of used jumps
         @used_jumps = 0
+        # the boost percentage to xmom from jumping off a solid surface
+        @jump_boost = 1.1
 
         # if true then the player will jump next tick if able to and set this to false.
         @jump = false
@@ -96,9 +103,17 @@ class Player < Entity
     def tick : Bool
         # process @jump if its true and jump if possible
         if @jump
-            if @used_jumps < @max_jumps
+            if @ceiling_running
+                @used_jumps = @max_jumps
+                @xmom *= @jump_boost
+                @ymom = -@jump_speed/2
+                @ceiling_running = false
+            elsif @used_jumps < @max_jumps
+                if @used_jumps == 0
+                    @xmom *= @jump_boost
+                end
                 @used_jumps += 1
-                @ymom = @jump_speed
+                @ymom = [@ymom, @jump_speed].min
                 @air = true
             end
             @jump = false
@@ -119,25 +134,37 @@ class Player < Entity
         accel = @air ? @accel_facor_air : @accel_facor_ground
         # pick the gravity based on weather or not your holding down the jump key
         fallaccel = @space ? @fall_factor_jump : @fall_factor_norm
-        @ymom = ((@ymom * fallaccel) + @max_fall_speed) / (fallaccel + 1)
+        
+        @ymom = ((@ymom * fallaccel) + @max_fall_speed) / (fallaccel + 1) if !@ceiling_running
         # going to the left means that you want to be going negative
         speed *= -1 if @left
         # update x momentum based of acceleration factor and if they are trying to move
-        @xmom = @right || @left ? ((@xmom * accel) + speed)/(accel + 1) : (@xmom * accel) / (accel + 1)
+        @xmom = @right || @left ? ((@xmom * accel) + speed)/(accel + 1) : (@xmom * accel) / (accel + 1) unless ((@xmom > 0) == (speed > 0)) && @xmom.abs > speed.abs
+
 
         # calculate the new coords,
-        newx = @xmom + @ground_to_air_xmom + @x
+        newx = @xmom + @x
         newy = @ymom + @y
         # apply them if they don't run into anything
         # if they do, apply the mom to 0
+        @ceiling_running = false
         if clips(@x, newy)
             if @ymom > 0
                 @air = false
                 @used_jumps = 0
+                @ymom *= 0.5
+            # ceiling running logic
+          elsif @ymom < 0 && @xmom.abs > @max_speed * @percent_speed_running
+                @used_jumps = @max_jumps
+                @upsidedown = true
+                @ceiling_running = true
+                @air = false
+                @ymom = -3.0
+            else
+                @ymom = 0.0
             end
-            @ground_to_air_xmom = 0.0
-            @ymom = 0.0
         else
+            @upsidedown = false
             if @used_jumps < 1
                 @used_jumps = 1
             end
@@ -145,7 +172,13 @@ class Player < Entity
             @y = newy
         end
         if clips(newx, @y)
-            @xmom = 0.0
+            # wall jump if going fast enough
+            if @xmom.abs > @max_speed
+                @xmom = @xmom * -1
+                @ymom = [@ymom, @jump_speed].min
+            else
+                @xmom = 0.0
+            end
         else
             @x = newx
         end
@@ -168,9 +201,9 @@ class Player < Entity
         # update booleans according to they control mapped to the key
         case @controls[key]
         when :primary
-          @primary_activate = true
+          @primary_activate = down
         when :secondary
-          @secondary_activate = true
+          @secondary_activate = down
         when :up
             @jump = !@space
             @space = down
@@ -210,7 +243,7 @@ class Player < Entity
         end
         if !@right && !@left
            anim(:sta)
-        elsif @xmom.abs > @max_speed - 0.25
+        elsif @xmom.abs > @max_speed * @percent_speed_running
            anim(:run)
         else
            anim(:wal)
