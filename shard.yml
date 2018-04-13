@@ -19,3 +19,6 @@ dependencies:
   stumpy_png:
     github: stumpycr/stumpy_png
 
+  bcsg:
+    github: FunkyQChicken/bcsg
+
